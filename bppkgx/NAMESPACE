@@ -1,0 +1,7 @@
+useDynLib(bppkgx)
+exportPattern("^[[:alpha:]]+")
+export(
+rcpparma_hello_world,
+fit.pkpg,
+fit.pkpgpall 
+)

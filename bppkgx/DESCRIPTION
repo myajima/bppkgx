@@ -1,0 +1,11 @@
+Package: bppkgx
+Type: Package
+Title: Bayesian PK/PGx
+Version: 1.0
+Date: 2012-11-01
+Author: Masanao Yajima, Donatello Telesca
+Maintainer: Masanao Yajima <yajima@ucla.edu>
+Description: More about what it does (maybe more than one line)
+License: GNU
+Depends: Rcpp (>= 0.9.10), RcppArmadillo (>= 0.2.29), mvtnorm, deSolve
+LinkingTo: Rcpp, RcppArmadillo
