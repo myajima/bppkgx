@@ -26,8 +26,11 @@ fit.pkpg <- function( Conc,
                       n_burn  = 1000,  
                       n_lag   = 1,
                       workdir = ".", 
-                      prior   = 'T')
+                      prior   = "TRUE",
+                      nosnp   = 1)
 {
+
+
   # CREATE PRIOR FILE -----------------------------------------------------------------------
   # ---- To add an interactive window for prior specification
 
@@ -100,11 +103,23 @@ fit.pkpg <- function( Conc,
     #iGsnp  <- diag( Q )
     #iGtheta<- diag( PK_V )
     #iGrho  <- matrix( 0, Q, PK_V )
-    iZ     <- matrix( rnorm( Nsnp * Q ), Nsnp, Q )
+
      # iAlpha <- matrix( rmvnorm( 1, alpha0, A0 ), PK_V, 1 )
     iBetaPk<- matrix( rmvnorm( PK_V, rep( 0, Ppk ), Bpk0 ), Ppk, PK_V )
+
+    iZ     <- matrix( rnorm( Nsnp * Q ), Nsnp, Q )
     iBetaPg<- matrix( rmvnorm(    Q, rep( 0, Ppg ), Bpg0 ), Ppg, Q  )
     iRho   <- matrix( rnorm(Q * PK_V),   Q, PK_V )
+
+    if(nosnp==0){
+      iRho   <- matrix( 0,    Q, PK_V )
+      iBetaPg<- matrix( 0,  Ppg,    Q )
+      iZ     <- matrix( 0, Nsnp,    Q )
+    }else{
+      iZ     <- matrix( rnorm( Nsnp * Q ), Nsnp, Q )
+      iBetaPg<- matrix( rmvnorm(    Q, rep( 0, Ppg ), Bpg0 ), Ppg, Q )
+      iRho   <- matrix( rnorm(Q * PK_V),   Q, PK_V )
+    }
     #iTau   <- matrix( rmvnorm( 1, alpha0, A0 ), PK_V, 1 )
     iSigma <- matrix( runif( Nconc * K, 0, 1 ), Nconc, K )
     #iGsnp  <- diag( Q )
@@ -469,7 +484,7 @@ fit.pkpg <- function( Conc,
              as.integer(                 K ), # No. of observed compartments
              as.integer(               Ppk ), # No. of PK covariates
              as.integer(               Ppg ), # No. of SNPs covariates
-             as.integer(                 1 ),
+             as.integer(            nosnp  ), # testing only calclates Z when 1 ignore when 0
              as.integer(           n_chain ), # No. of mcmc simulations  
              as.integer(            n_mcmc ), # No. of mcmc simulations
              as.integer(            n_burn ), # No. of discarded samples
